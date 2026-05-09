@@ -1,45 +1,48 @@
 services:
   server:
-    image: ubuntu:24.04
+    build:
+      context: .
+      dockerfile: Dockerfile
+
     container_name: server
     hostname: server
+
     privileged: true
+
+    stdin_open: true
+    tty: true
 
     ports:
       - "2222:22"
-      - "80:80"
-      - "443:443"
       - "6443:6443"
 
-    volumes:
-      - ./entrypoint.sh:/entrypoint.sh
-      - /workspace
-      - /var/lib/docker
-      - /var/snap
-      - /run/snapd.socket:/run/snapd.socket
-
-    environment:
-      - DEBIAN_FRONTEND=noninteractive
+    cgroup: host
 
     tmpfs:
       - /run
       - /run/lock
+      - /tmp
+
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - server-data:/workspace
+      - server-home:/root
 
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN
 
     devices:
-      - /dev/kvm:/dev/kvm
       - /dev/net/tun:/dev/net/tun
 
-    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+    command: ["/sbin/init"]
 
     restart: unless-stopped
 
-    networks:
-      - net
-
 networks:
-  net:
+  default:
     driver: bridge
+
+volumes:
+  server-data:
+  server-home:
