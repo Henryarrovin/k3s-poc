@@ -54,6 +54,11 @@ if ! command -v kubectl &> /dev/null; then
     mv kubectl /usr/local/bin/kubectl
 fi
 
+if ! command -v multipass &> /dev/null; then
+    echo "Installing multipass..."
+    snap install multipass
+fi
+
 systemctl enable snapd
 systemctl restart snapd || true
 
