@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  server:
+    image: ubuntu:24.04
+    container_name: henry-server
+    hostname: henry-server
+    privileged: true
+    ports:
+      - "2222:22"
+      - "80:80"
+      - "443:443"
+      - "6443:6443"
+    volumes:
+      - /workspace
+      - /var/lib/docker
+      - /var/snap
+      - /run/snapd.socket:/run/snapd.socket
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    devices:
+      - /dev/kvm:/dev/kvm
+      - /dev/net/tun:/dev/net/tun
+    entrypoint: /entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - henry-net
+
+networks:
+  henry-net:
+    driver: bridge
