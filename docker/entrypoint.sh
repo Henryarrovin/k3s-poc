@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Starting server setup..."
+echo "Starting setup..."
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -25,8 +25,6 @@ apt-get install -y \
     build-essential \
     snapd
 
-echo "Configuring SSH..."
-
 mkdir -p /var/run/sshd
 
 echo "root:root" | chpasswd
@@ -40,8 +38,6 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' \
 systemctl enable ssh
 systemctl restart ssh
 
-echo "Installing Go..."
-
 if [ ! -d /usr/local/go ]; then
     curl -LO https://go.dev/dl/go1.22.0.linux-amd64.tar.gz
     tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
@@ -49,12 +45,8 @@ if [ ! -d /usr/local/go ]; then
 fi
 
 echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
-export PATH=$PATH:/usr/local/go/bin
-
-echo "Installing kubectl..."
 
 if ! command -v kubectl &> /dev/null; then
-
     curl -LO \
     "https://dl.k8s.io/release/$(curl -L -s \
     https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -62,36 +54,14 @@ if ! command -v kubectl &> /dev/null; then
     mv kubectl /usr/local/bin/kubectl
 fi
 
-echo "Starting snapd..."
-
 systemctl enable snapd
-systemctl start snapd || true
+systemctl restart snapd || true
 
 sleep 10
 
-echo "Installing Multipass..."
-
-if ! command -v multipass &> /dev/null; then
-    snap install multipass --classic || true
-fi
+snap install multipass --classic || true
 
 mkdir -p /workspace/logs
 mkdir -p /workspace/kubernetes
 
 echo "SETUP COMPLETE"
-
-echo ""
-echo "SSH access:"
-echo "ssh root@localhost -p 2222"
-echo ""
-echo "Password:"
-echo "root"
-echo ""
-
-echo "Check multipass:"
-echo "multipass version"
-echo ""
-
-echo "Check snap:"
-echo "snap list"
-echo ""

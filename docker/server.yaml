@@ -1,6 +1,8 @@
 services:
   server:
-    image: jrei/systemd-ubuntu:24.04
+    build:
+      context: .
+      dockerfile: Dockerfile
 
     container_name: server
     hostname: server
@@ -23,7 +25,6 @@ services:
 
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
-      - ./setup.sh:/setup.sh
 
     cap_add:
       - SYS_ADMIN
