@@ -25,6 +25,8 @@ services:
 
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - server-data:/workspace
+      - server-home:/root
 
     cap_add:
       - SYS_ADMIN
@@ -37,9 +39,10 @@ services:
 
     restart: unless-stopped
 
-    networks:
-      - net
-
 networks:
-  net:
+  default:
     driver: bridge
+
+volumes:
+  server-data:
+  server-home:
