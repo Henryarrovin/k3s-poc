@@ -2,7 +2,10 @@
 
 # Copy kubeconfig from master to server container
 mkdir -p /root/.kube
-multipass exec master -- sudo cat /etc/rancher/k3s/k3s.yaml > /root/.kube/config
+multipass exec master -- bash -c "sudo cat /etc/rancher/k3s/k3s.yaml" > /root/.kube/config
+
+MASTER_IP=$(multipass info master | grep IPv4 | awk '{print $2}')
+echo "Master IP: $MASTER_IP"
 
 # kubeconfig has 127.0.0.1 (master's localhost)
 # We need the actual master IP
