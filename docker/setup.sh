@@ -62,6 +62,8 @@ if [ ! -d /workspace/.git ]; then
     git clone https://github.com/Henryarrovin/k3s-poc.git .
 fi
 
+find /workspace -type f -name "*.sh" -exec chmod +x {} \;
+
 if ! command -v multipass &> /dev/null; then
     echo "Installing multipass..."
     snap install multipass
