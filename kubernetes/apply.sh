@@ -1,16 +1,16 @@
 #!/bin/bash
 set -e
 
-cd /workspace/kubernetes
+cd ../kubernetes
 
 echo "Creating namespace..."
 kubectl apply -f namespace.yaml
 
 echo "Creating secrets..."
-if [ ! -f /workspace/.env.secrets ]; then
+if [ ! -f ../kubernetes/.env.secrets ]; then
     echo "▶ .env.secrets not found, generating..."
     CANONICAL_SECRET=$(openssl rand -hex 32)
-    cat > /workspace/.env.secrets << EOF
+    cat > ../kubernetes/.env.secrets << EOF
 AUTH_DB_PASSWORD=postgres
 PAYMENT_DB_PASSWORD=postgres
 AUTH_JWT_ACCESS_SECRET=$(openssl rand -hex 32)
@@ -23,16 +23,16 @@ else
 fi
 
 echo "Secrets file contents:"
-cat /workspace/.env.secrets
+cat ../kubernetes/.env.secrets
 
 kubectl create secret generic auth-secrets \
     --namespace auth \
-    --from-env-file=/workspace/.env.secrets \
+    --from-env-file=../kubernetes/.env.secrets \
     --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl create secret generic payment-secrets \
     --namespace auth \
-    --from-env-file=/workspace/.env.secrets \
+    --from-env-file=../kubernetes/.env.secrets \
     --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Secret created"
