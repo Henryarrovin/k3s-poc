@@ -55,8 +55,12 @@ if ! command -v kubectl &> /dev/null; then
 fi
 
 mkdir -p /workspace
+cd /workspace
 
-git clone https://github.com/Henryarrovin/k3s-poc.git /workspace
+if [ ! -d /workspace/.git ]; then
+    cd /workspace
+    git clone https://github.com/Henryarrovin/k3s-poc.git .
+fi
 
 if ! command -v multipass &> /dev/null; then
     echo "Installing multipass..."
@@ -68,6 +72,9 @@ systemctl restart snapd || true
 
 sleep 10
 
-snap install multipass --classic || true
+if ! command -v multipass &> /dev/null; then
+    echo "Installing multipass..."
+    snap install multipass --classic || true
+fi
 
 echo "SETUP COMPLETE"
