@@ -4,7 +4,7 @@
 MASTER_IP=$(multipass info master | grep IPv4 | awk '{print $2}')
 echo "Master IP: $MASTER_IP"
 
-TOKEN=$(multipass exec master -- sudo cat /var/lib/rancher/k3s/server/node-token)
+TOKEN=$(multipass exec master -- bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")
 echo "Token: $TOKEN"
 
 # k3s agent starts on worker
