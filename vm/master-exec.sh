@@ -19,7 +19,12 @@ echo "Master IP detected: $MASTER_IP"
 # Node is Ready in ~30 seconds
 multipass exec master -- bash -c "
 curl -sfL https://get.k3s.io | \
-INSTALL_K3S_EXEC='server --tls-san $MASTER_IP' sh -
+INSTALL_K3S_EXEC='
+server \
+--node-ip=${MASTER_IP} \
+--advertise-address=${MASTER_IP} \
+--tls-san=${MASTER_IP}
+' sh -
 "
 
 echo "Waiting for k3s to start..."
