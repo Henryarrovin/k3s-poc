@@ -6,7 +6,7 @@ multipass launch \
     --cpus 2 \
     --memory 2G \
     --disk 20G \
-    --network name=Ethernet \
+    --network name=Wi-Fi \
     22.04
 
 # Create worker1
@@ -15,7 +15,7 @@ multipass launch \
     --cpus 2 \
     --memory 2G \
     --disk 20G \
-    --network name=Ethernet \
+    --network name=Wi-Fi \
     22.04
 
 # Create worker2
@@ -24,5 +24,5 @@ multipass launch \
     --cpus 2 \
     --memory 2G \
     --disk 20G \
-    --network name=Ethernet \
+    --network name=Wi-Fi \
     22.04
