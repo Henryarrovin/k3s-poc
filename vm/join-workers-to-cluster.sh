@@ -1,11 +1,28 @@
 #!/bin/bash
 
-# In server container
+set -e
+
+echo "Fetching master reachable IP..."
+
 MASTER_IP=$(multipass info master | grep IPv4 | awk '{print $2}')
+
+if [ -z "$MASTER_IP" ]; then
+    echo "Failed to detect master IP"
+    exit 1
+fi
+
 echo "Master IP: $MASTER_IP"
 
+echo "Fetching node token..."
+
 TOKEN=$(multipass exec master -- bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")
-echo "Token: $TOKEN"
+
+if [ -z "$TOKEN" ]; then
+    echo "Failed to fetch token"
+    exit 1
+fi
+
+echo "Joining workers to cluster..."
 
 # k3s agent starts on worker
 # Connects to master API server (port 6443)
@@ -15,19 +32,29 @@ echo "Token: $TOKEN"
 # kubelet starts — reports node capacity (CPU, RAM)
 # kube-proxy starts — handles pod networking
 # Master can now schedule pods on this worker
+WORKERS=("worker1" "worker2")
 
-# Join worker1
-multipass exec worker1 -- bash -c "
-    curl -sfL https://get.k3s.io | \
-    K3S_URL=https://${MASTER_IP}:6443 \
-    K3S_TOKEN=${TOKEN} \
-    sh -
-"
+for WORKER in "${WORKERS[@]}"; do
 
-# Join worker2
-multipass exec worker2 -- bash -c "
-    curl -sfL https://get.k3s.io | \
-    K3S_URL=https://${MASTER_IP}:6443 \
-    K3S_TOKEN=${TOKEN} \
-    sh -
-"
+    if multipass info "$WORKER" >/dev/null 2>&1; then
+
+        echo ""
+        echo "Joining $WORKER ..."
+
+        multipass exec "$WORKER" -- bash -c "
+            curl -sfL https://get.k3s.io | \
+            K3S_URL='https://${MASTER_IP}:6443' \
+            K3S_TOKEN='${TOKEN}' \
+            sh -
+        "
+
+        echo "$WORKER joined successfully."
+
+    else
+        echo "$WORKER does not exist. Skipping..."
+    fi
+done
+
+echo ""
+echo "Cluster nodes:"
+kubectl get nodes
