@@ -20,7 +20,7 @@ echo "Environment detected: $ENV"
 
 echo "Fetching master IP..."
 
-MASTER_IP=$(multipass exec master -- hostname -I | awk '{print $1}')
+MASTER_IP=$(multipass info master | grep IPv4 | awk '{print $2}')
 
 if [[ -z "$MASTER_IP" ]]; then
     echo "Failed to detect master IP"
