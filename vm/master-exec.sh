@@ -23,7 +23,7 @@ multipass exec master -- sudo kubectl get nodes || true
 echo "Waiting for token..."
 TOKEN=""
 while [ -z "$TOKEN" ]; do
-  TOKEN=$(multipass exec master -- sudo cat /var/lib/rancher/k3s/server/token 2>/dev/null || true)
+  TOKEN=$(multipass exec master -- bash -c "sudo cat /var/lib/rancher/k3s/server/node-token" 2>/dev/null || true)
   sleep 3
 done
 
