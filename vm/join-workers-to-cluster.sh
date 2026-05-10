@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # In server container
 MASTER_IP=$(multipass info master | grep IPv4 | awk '{print $2}')
 echo "Master IP: $MASTER_IP"

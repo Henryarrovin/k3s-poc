@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copy kubeconfig from master to server container
 mkdir -p /root/.kube
 multipass exec master -- sudo cat /etc/rancher/k3s/k3s.yaml > /root/.kube/config
