@@ -38,8 +38,10 @@ for WORKER in "${WORKERS[@]}"; do
 
     if multipass info "$WORKER" >/dev/null 2>&1; then
 
+        WORKER_IP=$(multipass info "$WORKER" | grep IPv4 | head -n1 | awk '{print $2}')
+
         echo ""
-        echo "Joining $WORKER ..."
+        echo "Joining $WORKER with IP $WORKER_IP ..."
 
         multipass exec "$WORKER" -- bash -c "
             curl -sfL https://get.k3s.io | \
