@@ -13,6 +13,8 @@ spec:
       labels:
         app: redis
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: worker1
       containers:
         - name: redis
           image: redis:7-alpine

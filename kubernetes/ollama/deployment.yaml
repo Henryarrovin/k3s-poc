@@ -13,6 +13,8 @@ spec:
       labels:
         app: ollama
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: worker2
       containers:
         - name: ollama
           image: ollama/ollama:latest
