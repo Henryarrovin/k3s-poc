@@ -81,12 +81,19 @@ kubectl wait --namespace auth \
     --selector=app=kafka \
     --timeout=120s
 
-echo "Creating databases..."
+echo "Creating payment_db database..."
 kubectl exec -n auth deployment/postgres -- \
-    psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='payment_db'" | \
-    grep -q 1 || \
-    kubectl exec -n auth deployment/postgres -- \
-    psql -U postgres -c "CREATE DATABASE payment_db;"
+  psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='payment_db'" | \
+  grep -q 1 || \
+  kubectl exec -n auth deployment/postgres -- \
+  psql -U postgres -c "CREATE DATABASE payment_db;"
+
+echo "Creating auth_db database..."
+kubectl exec -n auth deployment/postgres -- \
+  psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='auth_db'" | \
+  grep -q 1 || \
+  kubectl exec -n auth deployment/postgres -- \
+  psql -U postgres -c "CREATE DATABASE auth_db;"
 
 echo "Deploying auth service..."
 kubectl apply -f auth-service/deployment.yaml
