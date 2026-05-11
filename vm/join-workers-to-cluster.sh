@@ -38,13 +38,16 @@ for WORKER in "${WORKERS[@]}"; do
 
     if multipass info "$WORKER" >/dev/null 2>&1; then
 
+        WORKER_IP=$(multipass info "$WORKER" | grep IPv4 | head -n1 | awk '{print $2}')
+
         echo ""
-        echo "Joining $WORKER ..."
+        echo "Joining $WORKER with IP $WORKER_IP ..."
 
         multipass exec "$WORKER" -- bash -c "
             curl -sfL https://get.k3s.io | \
             K3S_URL='https://${MASTER_IP}:6443' \
             K3S_TOKEN='${TOKEN}' \
+            INSTALL_K3S_EXEC='--node-ip=${WORKER_IP}' \
             sh -
         "
 
