@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+
+    - name: Install packages
+      apt:
+        name:
+          - git
+          - curl
+          - wget
+          - unzip
+          - jq
+          - vim
+          - htop
+        state: present
+
+    - name: Disable swap
+      command: swapoff -a
