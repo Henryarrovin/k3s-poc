@@ -1,3 +1,32 @@
 # Environment variables
 .env
 .env.secrets
+
+# terraform
+# Local .terraform directories (contains downloaded plugins and modules)
+**/.terraform/*
+
+# .tfstate files (contains sensitive infrastructure data, use remote backends instead)
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files (often contain passwords, API keys, and secrets)
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually local tweaks
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+*tfplan*
+
+# CLI configuration files
+.terraformrc
+terraform.rc
