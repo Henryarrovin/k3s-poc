@@ -1,0 +1,28 @@
+---
+- hosts: k3s_master
+  become: yes
+
+  tasks:
+    - name: Install K3s server
+      shell: |
+        curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for K3s token
+      wait_for:
+        path: /var/lib/rancher/k3s/server/node-token
+        timeout: 60
+
+    - name: Read K3s token
+      slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: node_token
+
+    - name: Save token as fact
+      set_fact:
+        k3s_token: "{{ node_token.content | b64decode | trim }}"
+
+    - name: Show token
+      debug:
+        msg: "{{ k3s_token }}"

@@ -1,0 +1,4 @@
+---
+- import_playbook: common.yaml
+- import_playbook: k3s-master.yaml
+- import_playbook: k3s-workers.yaml

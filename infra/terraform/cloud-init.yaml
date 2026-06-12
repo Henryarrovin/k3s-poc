@@ -1,18 +1,4 @@
 #cloud-config
 
-package_update: true
-package_upgrade: true
-
-packages:
-  - git
-  - curl
-  - wget
-  - vim
-  - unzip
-  - jq
-  - net-tools
-  - htop
-
 runcmd:
   - swapoff -a
-  - sed -i '/ swap / s/^/#/' /etc/fstab
