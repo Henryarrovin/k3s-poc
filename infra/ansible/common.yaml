@@ -3,11 +3,11 @@
   become: yes
 
   tasks:
-    - name: Update apt
+    - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Install packages
+    - name: Install required packages
       apt:
         name:
           - git
@@ -21,3 +21,9 @@
 
     - name: Disable swap
       command: swapoff -a
+
+    - name: Disable swap permanently
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*\sswap\s+.*)$'
+        replace: '# \1'

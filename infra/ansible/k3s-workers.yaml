@@ -3,13 +3,15 @@
   become: yes
 
   vars:
-    k3s_url: "https://192.168.64.10:6443"
-    k3s_token: "TOKEN_FROM_MASTER"
+    k3s_url: "https://{{ hostvars['master']['ansible_host'] }}:6443"
+    k3s_token: "{{ hostvars['master']['k3s_token'] }}"
 
   tasks:
-    - name: Join cluster
+    - name: Join K3s cluster
       shell: |
         curl -sfL https://get.k3s.io | \
         K3S_URL={{ k3s_url }} \
         K3S_TOKEN={{ k3s_token }} \
         sh -
+      args:
+        creates: /usr/local/bin/k3s-agent
