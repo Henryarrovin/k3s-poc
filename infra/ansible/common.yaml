@@ -19,6 +19,9 @@
           - htop
         state: present
 
+    - name: Install Python
+      raw: apt-get update && apt-get install -y python3
+
     - name: Disable swap
       command: swapoff -a
 
